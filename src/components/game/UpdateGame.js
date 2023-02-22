@@ -1,11 +1,18 @@
+// A react route that renders a form
+// The form should be filled out with the existing data
+// When changes are made in the form the state of the component updates
+// When the submit button is clicked, it should make a PUT request to the correct resource with the updated data in the body
+// After the fetch call is resolved, the page should route to the game/event’s detail page
+
 import { useState, useEffect } from "react"
-import { useNavigate } from 'react-router-dom'
-import { createGame, getGameTypes } from '../../managers/GameManager.js'
+import { useNavigate,useParams } from 'react-router-dom'
+import { getGameById, getGameTypes, updateGame } from '../../managers/GameManager.js'
 
 
-export const GameForm = () => {
+export const UpdateGame = () => {
     const navigate = useNavigate()
     const [gameTypes, setGameTypes] = useState([])
+    const { gameId } = useParams()
 
     /*
         Since the input fields are bound to the values of
@@ -17,13 +24,19 @@ export const GameForm = () => {
         min_players:0,
         max_players:0,
         min_age: 0,
-        game_type: 0
+        gamer: 0,
+        game_type: {},
+        // gameTypeId: 0
     })
 
     useEffect(() => {
         // TODO: Get the game types, then set the state
-        getGameTypes().then(res => setGameTypes(res))
-    }, [])
+        getGameTypes().then(data => setGameTypes(data))
+        getGameById(gameId).then((data) => {
+            data.gameTypeId = data.game_type.id
+            setCurrentGame(data)
+        })
+    }, [gameId])
 
     const changeGameState = (event) => {
         // TODO: Complete the onChange function
@@ -35,7 +48,7 @@ export const GameForm = () => {
 
     return (
         <form className="gameForm">
-            <h2 className="gameForm__title">Register New Game</h2>
+            <h2 className="gameForm__title">Update Game</h2>
             <fieldset>
                 <div className="form-group">
                     <label htmlFor="title">Title: </label>
@@ -48,9 +61,9 @@ export const GameForm = () => {
 
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="min_player">Minimum Number of Players: </label>
-                    <input type="number" name="min_player" required autofocus className="form-control"
-                        value={parseInt(currentGame.min_player)}
+                    <label htmlFor="min_players">Minimum Number of Players: </label>
+                    <input type="number" name="min_players" required autofocus className="form-control"
+                        value={parseInt(currentGame.min_players)}
                         onChange={changeGameState}
                     />
                 </div>
@@ -58,9 +71,9 @@ export const GameForm = () => {
 
             <fieldset>
                 <div className="form-group">
-                    <label htmlFor="max_player">Maximum Number of Players: </label>
-                    <input type="number" name="max_player" required autofocus className="form-control"
-                        value={parseInt(currentGame.max_player)}
+                    <label htmlFor="max_players">Maximum Number of Players: </label>
+                    <input type="number" name="max_players" required autofocus className="form-control"
+                        value={parseInt(currentGame.max_players)}
                         onChange={changeGameState}
                     />
                 </div>
@@ -110,10 +123,10 @@ export const GameForm = () => {
                     }
 
                     // Send POST request to your API
-                    createGame(game)
+                    updateGame(game, gameId)
                         .then(() => navigate("/games"))
                 }}
-                className="btn btn-primary">Create</button>
+                className="btn btn-primary">Update</button>
         </form>
     )
 }
