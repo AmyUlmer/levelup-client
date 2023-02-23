@@ -3,6 +3,7 @@ import { Login } from "../components/auth/Login"
 import { Register } from "../components/auth/Register"
 import { EventForm } from "../components/event/EventForm"
 import { EventList } from "../components/event/EventList"
+import { UpdateEvent } from "../components/event/UpdateEvent"
 import { GameForm } from "../components/game/GameForm"
 import { GameList } from "../components/game/GameList"
 import { UpdateGame } from "../components/game/UpdateGame"
@@ -24,7 +25,7 @@ export const ApplicationViews = () => {
                 <Route path="events" >
                     <Route index element={<EventList />} />
                     <Route path="new" element={<EventForm />} />
-                    {/* <Route path="edit/:eventId" element={<UpdateEvent />} /> */}
+                    <Route path="edit/:eventId" element={<UpdateEvent />} />
                 </Route>
                 <Route path="gamers" element={<GameList />} />
                 
